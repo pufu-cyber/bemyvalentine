@@ -20,7 +20,17 @@
             cursor: pointer; box-shadow: 0 4px 15px rgba(0,0,0,0.1); 
         }
         #yesBtn { background-color: #ff69b4; color: white; font-weight: bold; position: relative; z-index: 20; }
-        #noBtn { background-color: #f0f0f0; color: #666; position: absolute; z-index: 20; }
+        #noBtn {
+    background-color: #f0f0f0;
+    color: #666;
+    position: fixed; 
+    z-index: 999;
+    transition: 0.1s;
+    padding: 15px 30px;
+    border-radius: 50px;
+    border: none;
+    touch-action: none; 
+}
     </style>
 </head>
 <body>
@@ -44,29 +54,30 @@
         const noGifs = ["trist1.gif", "trist2.gif"];
         let messageIndex = 0;
 
-        function moveAndChange() {
+       function moveAndChange() {
     const noBtn = document.getElementById('noBtn');
     const mainGif = document.getElementById('mainGif');
     const questionText = document.getElementById('question');
 
-    // Calculăm zona sigură (Lățime ecran - Lățime buton - Marjă)
-    // Folosim Math.max pentru a evita numere negative pe ecrane foarte mici
-    const maxWidth = window.innerWidth - noBtn.offsetWidth - 20;
-    const maxHeight = window.innerHeight - noBtn.offsetHeight - 20;
+    
+    const padding = 50;
 
-    // Generăm poziția în interiorul acestor limite
-    const x = Math.max(0, Math.random() * maxWidth);
-    const y = Math.max(0, Math.random() * maxHeight);
+    
+    const maxWidth = window.innerWidth - noBtn.offsetWidth - padding;
+    const maxHeight = window.innerHeight - noBtn.offsetHeight - padding;
 
-    // Aplicăm noile coordonate
-    noBtn.style.left = x + 'px';
-    noBtn.style.top = y + 'px';
+    
+    const randomX = Math.floor(Math.random() * (maxWidth - padding)) + padding;
+    const randomY = Math.floor(Math.random() * (maxHeight - padding)) + padding;
 
-    // Schimbăm textul și GIF-ul ca înainte
+    noBtn.style.left = randomX + "px";
+    noBtn.style.top = randomY + "px";
+
+
     questionText.innerText = noMessages[messageIndex];
     messageIndex = (messageIndex + 1) % noMessages.length;
 
-            // Schimbare GIF (doar dacă există în listă)
+           
             if(noGifs.length > 0) {
                 mainGif.src = noGifs[Math.floor(Math.random() * noGifs.length)];
             }
@@ -74,17 +85,17 @@
 
         function celebrate() {
             const song = document.getElementById('loveSong');
-            // Pornim muzica (cu protecție pentru erori)
+            
             if (song) {
                 song.play().catch(() => console.log("Muzica va porni la click"));
             }
 
-            // Confetti
+            
             if (typeof confetti === 'function') {
                 confetti({ particleCount: 150, spread: 70, origin: { y: 0.6 } });
             }
 
-            // Final
+            
             document.getElementById('question').innerHTML = "¡Genial! Nos vemos el 14 de febrero, guapa. ✨❤️";
             document.querySelector('.buttons').style.display = 'none';
             document.getElementById('mainGif').src = "celebrare.gif";
